@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  todoui:
+    build: .
+    container_name: todoui
+    restart: always
+    ports:
+      - "3030:3030"
+    networks:
+      - mynetwork3
+
+networks:
+  mynetwork3:
+    driver: bridge
