@@ -3,48 +3,52 @@ package org.example.todolistuilab3.controllers;
 import org.example.todolistuilab3.DTOs.TaskDTO;
 import org.example.todolistuilab3.serviceClient.TaskServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/ui/tasks")
+@Controller
+@RequestMapping("/tasks")
 public class UiController {
 
-    private final TaskServiceClient taskServiceClient;
+    private final UiRestController uiRestController;
 
     @Autowired
-    public UiController (TaskServiceClient taskServiceClient) {
-        this.taskServiceClient = taskServiceClient;
+    public UiController(UiRestController uiRestController) {
+        this.uiRestController = uiRestController;
     }
 
     @GetMapping
-    public List<TaskDTO> getAllTasks() {
-        return taskServiceClient.getAllTasks();
+    public String getAllTasks(Model model) {
+        List<TaskDTO> tasks = uiRestController.getAllTasks();
+        model.addAttribute("tasks", tasks);
+        return "tasks";
     }
 
     @GetMapping("/{id}")
-    public TaskDTO getTaskById(@PathVariable Long id) {
-        return taskServiceClient.getTaskById(id);
+    public String getTaskById(@PathVariable Long id, Model model) {
+        TaskDTO task = uiRestController.getTaskById(id);
+        model.addAttribute("task", task);
+        return "oneTask";
     }
 
     @PostMapping("/create")
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
-        return taskServiceClient.createTask(taskDTO);
+    public String createTask(@RequestBody TaskDTO taskDTO) {
+        TaskDTO task = uiRestController.createTask(taskDTO);
+        return "redirect:/tasks";
     }
 
     @PutMapping("/update/{id}")
-    public void updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
-        taskServiceClient.updateTask(id, taskDTO);
+    public String updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        uiRestController.updateTask(id, taskDTO);
+        return "redirect:/tasks";
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        taskServiceClient.deleteTask(id);
+    public String deleteTask(@PathVariable Long id) {
+        uiRestController.deleteTask(id);
+        return "redirect:/tasks";
     }
 }
-
