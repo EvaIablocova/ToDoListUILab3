@@ -1,0 +1,21 @@
+.fas.fa-trash {
+    color: #ffffff !important; /* Устанавливаем белый цвет */
+}
+
+#dataTable {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.gallery-container-above-footer {
+    margin-bottom: 50px; /* Отступ снизу для элемента выше шутера */
+}
+
+#content-wrapper {
+    padding: 0;
+}
+
+.card {
+    margin-top: 0;
+    padding: 0;
+}

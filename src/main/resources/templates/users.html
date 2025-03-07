@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Tasks</title>
+    <title>Users</title>
 
     <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
@@ -39,58 +39,58 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Tasks</h1>
+                <h1 class="h3 mb-2 text-gray-800">Users</h1>
 
-<!--                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">-->
-<!--                    Add User-->
-<!--                </button>-->
+                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">
+                    Add User
+                </button>
 
-<!--                <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">-->
-<!--                    <div class="modal-dialog" role="document">-->
-<!--                        <div class="modal-content">-->
-<!--                            <div class="modal-header">-->
-<!--                                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>-->
-<!--                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                    <span aria-hidden="true">&times;</span>-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                            <div class="modal-body">-->
-<!--                                <form id="addUserForm">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="role">Role</label>-->
-<!--                                        <select id="role" name="role">-->
-<!--                                            <option>Customer</option>-->
-<!--                                            <option>Guest</option>-->
-<!--                                            <option>Admin</option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="username">Username</label>-->
-<!--                                        <input type="text" class="form-control" id="username" name="username" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="email">Email</label>-->
-<!--                                        <input type="email" class="form-control" id="email" name="email" required>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="password">Password</label>-->
-<!--                                        <input type="password" class="form-control" id="password" name="password" required>-->
-<!--                                    </div>-->
-<!--                                </form>-->
-<!--                            </div>-->
-<!--                            <div class="modal-footer">-->
-<!--                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-<!--                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="addUserButton">Add User</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addUserForm">
+                                    <div class="form-group">
+                                        <label for="role">Role</label>
+                                        <select id="role" name="role">
+                                            <option>Customer</option>
+                                            <option>Guest</option>
+                                            <option>Admin</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="addUserButton">Add User</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Tasks table</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Users table</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -98,24 +98,24 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Assigned to</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
+                                    <th>Role</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
                                     <th>Delete</th>
                                     <th>Update</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="task : ${tasks}" th:id="'row-' + ${task.id}">
-                                    <td th:text="${task.id}"></td>
-                                    <td th:text="${task.title}" class="editable" data-field="title"></td>
-                                    <td th:text="${task.assignedTo}" class="editable" data-field="assignedTo"></td>
-                                    <td th:text="${task.priority}" class="editable" data-field="priority"></td>
-                                    <td th:text="${task.status}" class="editable" data-field="status"></td>
+                                <tr th:each="user : ${users}" th:id="'row-' + ${user.id}">
+                                    <td th:text="${user.id}"></td>
+                                    <td th:text="${user.role}" class="editable" data-field="role"></td>
+                                    <td th:text="${user.username}" class="editable" data-field="username"></td>
+                                    <td th:text="${user.email}" class="editable" data-field="email"></td>
+                                    <td th:text="${user.password}" class="editable" data-field="password"></td>
                                     <td>
 
-                                        <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post" style="display:inline;">
+                                        <form th:action="@{/users/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
                                             <button type="submit" class="btn btn-danger btn-circle">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -123,16 +123,18 @@
                                     </td>
                                     <td>
                                         <!-- Кнопка "Update" -->
-                                        <button class="btn btn-warning btn-circle update-button" th:data-id="${task.id}">
+                                        <button class="btn btn-warning btn-circle update-button" th:data-id="${user.id}">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <!-- Кнопка "Save", изначально скрыта -->
-                                        <button class="btn btn-success btn-circle save-button" th:data-id="${task.id}" style="display: none;">
+                                        <button class="btn btn-success btn-circle save-button" th:data-id="${user.id}" style="display: none;">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 </tbody>
+
+
                             </table>
                         </div>
                     </div>
@@ -248,43 +250,46 @@
                 // Скрыть кнопку "Save" и показать кнопку "Update"
                 this.style.display = "none";
                 row.querySelector(".update-button").style.display = "inline-block";
-                    // Создать объект TaskDTO из данных строки
-                    const updatedTaskDTO = {
+
+                // Создать объект UserDTO из данных строки
+                const updatedUserDTO = {
                     id: rowId, // ID строки
-                    title: row.querySelector(".editable[data-field='title'] input").value.trim(),
-                    assignedTo: row.querySelector(".editable[data-field='assignedTo'] input").value.trim(),
-                    priority: row.querySelector(".editable[data-field='priority'] input").value.trim(),
-                    status: row.querySelector(".editable[data-field='status'] input").value.trim()
+                    role: row.querySelector(".editable[data-field='role'] input").value.trim(),
+                    username: row.querySelector(".editable[data-field='username'] input").value.trim(),
+                    email: row.querySelector(".editable[data-field='email'] input").value.trim(),
+                    password: row.querySelector(".editable[data-field='password'] input").value.trim()
                 };
 
-                    // Вернуть данные строки в режим отображения
-                    row.querySelectorAll(".editable").forEach(cell => {
+                // Вернуть данные строки в режим отображения
+                row.querySelectorAll(".editable").forEach(cell => {
                     const input = cell.querySelector("input");
                     cell.textContent = input.value.trim(); // Возвращаем текстовое отображение
                 });
 
-                    // Отправить `updatedUserDTO` на сервер через AJAX
-                    fetch(`/tasks/update/${rowId}`, {
+                // Отправить `updatedUserDTO` на сервер через AJAX
+                fetch(`/users/update/${rowId}`, {
                     method: "PUT",
                     headers: {
-                    "Content-Type": "application/json"
-                },
-                    body: JSON.stringify(updatedTaskDTO) // Сериализуем объект TaskDTO в JSON
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(updatedUserDTO) // Сериализуем объект UserDTO в JSON
                 })
                     .then(response => {
-                    if (!response.ok) {
-                    throw new Error(`Ошибка: ${response.status}`);
-                }
-                    return response.text();
-                })
+                        if (!response.ok) {
+                            throw new Error(`Ошибка: ${response.status}`);
+                        }
+                        return response.text();
+                    })
                     .then(data => console.log("Ответ сервера:", data))
                     .catch(error => console.error("Ошибка запроса:", error));
-                    });
-                    });
-                    });
+            });
+        });
+    });
 
 
 </script>
+
+
 
 
 </body>
