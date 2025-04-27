@@ -3,6 +3,7 @@ package org.example.todolistuilab3.controllers;
 import org.example.todolistuilab3.DTOs.EmailDTO;
 import org.example.todolistuilab3.DTOs.TaskDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,10 +44,20 @@ public class UiController {
     }
 
     @GetMapping("/dto/{id}")
-    public TaskDTO getTaskDTOById(@PathVariable Long id, Model model) {
-        TaskDTO task = uiRestController.getTaskById(id);
-        model.addAttribute("task", task);
-        return task;
+    @ResponseBody
+    public ResponseEntity<TaskDTO> getTaskDTOById(@PathVariable Long id, Model model) {
+        logger.info("Запрос для получения задачи с id: {}", id);
+        try {
+            TaskDTO task = uiRestController.getTaskById(id);
+            if (task == null) {
+                logger.warn("Задача с id {} не найдена", id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(task);
+        } catch (Exception e) {
+            logger.error("Ошибка при получении задачи с id {}: {}", id, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PostMapping("/create")

@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,10 +16,6 @@
     <link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/custom.css}" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 
 <body id="page-top">
@@ -61,7 +56,6 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-
 
                             <div class="modal-body">
                                 <form id="addTaskForm">
@@ -107,7 +101,6 @@
                     </div>
                 </div>
 
-
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -145,7 +138,7 @@
                                     </td>
 
                                     <td>
-                                        <button class="btn btn-primary btn-circle" onclick="openEmailModal('[[${task.id}]]')">
+                                        <button class="btn btn-primary btn-circle" th:onclick="'openEmailModal(' + ${task.id} + ')'">
                                             <i class="fas fa-envelope"></i>
                                         </button>
 
@@ -208,41 +201,48 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Bootstrap core JavaScript-->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!-- Load scripts in the correct order -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
-
-<!-- Custom scripts for all pages-->
-<script th:src="@{/js/sb-admin-2.min.js}"></script>
-
-<!-- Page level plugins -->
-<script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
-<script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
-
-<!-- Page level custom scripts -->
-<script th:src="@{/js/demo/datatables-demo.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/js/sb-admin-2.min.js"></script>
+<script>
+    // Custom DataTables initialization (replacing datatables-demo.js)
+    $(document).ready(function() {
+        $('#dataTable').DataTable();
+    });
+</script>
 
 <script>
     function openEmailModal(taskId) {
-        fetch(`/tasks/${taskId}`)
+        const id = parseInt(taskId, 10);
+        if (isNaN(id)) {
+            console.error('Некорректный taskId:', taskId);
+            return;
+        }
+        fetch(`/tasks/dto/${id}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Ошибка при получении задачи');
+                    throw new Error(`Ошибка при получении задачи: ${response.status} ${response.statusText}`);
                 }
                 return response.json();
             })
             .then(task => {
-                document.getElementById('body').value = task.description || '';
+                if (task) {
+                    document.getElementById('body').value = task.description || '';
+                } else {
+                    document.getElementById('body').value = '';
+                }
                 document.getElementById('emailModal').style.display = 'block';
             })
-            .catch(error => console.error('Ошибка получения задачи:', error));
+            .catch(error => {
+                console.error('Ошибка в openEmailModal:', error);
+                alert('Не удалось загрузить данные задачи: ' + error.message);
+                document.getElementById('body').value = '';
+                document.getElementById('emailModal').style.display = 'block';
+            });
     }
 
     function closeEmailModal() {
@@ -305,20 +305,17 @@
         const addTaskForm = document.getElementById("addTaskForm");
 
         addTaskButton.addEventListener("click", function () {
-            // Собираем данные из формы напрямую через элементы
             const title = document.getElementById("title").value.trim();
             const description = document.getElementById("description").value.trim();
             const status = document.getElementById("status").value;
             const priority = document.getElementById("priority").value;
             const assignedTo = document.getElementById("assignedTo").value.trim();
 
-            // Проверяем обязательные поля
             if (!title || !description || !assignedTo) {
                 alert("Пожалуйста, заполните все обязательные поля: Title, Description и Assigned to.");
                 return;
             }
 
-            // Проверяем корректность значений для status и priority
             const validStatuses = ["NEW", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
             const validPriorities = ["1", "2", "3"];
             if (!validStatuses.includes(status)) {
@@ -354,8 +351,8 @@
                 })
                 .then(data => {
                     console.log("Task успешно создан:", data);
-                    addTaskForm.reset(); // Очистить форму
-                    $("#addTaskModal").modal("hide"); // Закрыть модальное окно
+                    addTaskForm.reset();
+                    $("#addTaskModal").modal("hide");
                     location.reload();
                 })
                 .catch(error => {
@@ -368,17 +365,14 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Обработчик для кнопок "Update"
         document.querySelectorAll(".update-button").forEach(button => {
             button.addEventListener("click", function () {
                 const rowId = this.getAttribute("data-id");
                 const row = document.querySelector(`#row-${rowId}`);
 
-                // Скрыть кнопку "Update" и показать кнопку "Save"
                 this.style.display = "none";
                 row.querySelector(".save-button").style.display = "inline-block";
 
-                // Перевести ячейки в режим редактирования
                 row.querySelectorAll(".editable").forEach(cell => {
                     const value = cell.textContent.trim();
                     cell.innerHTML = `<input type="text" value="${value}" class="form-control">`;
@@ -386,37 +380,33 @@
             });
         });
 
-        // Обработчик для кнопок "Save"
         document.querySelectorAll(".save-button").forEach(button => {
             button.addEventListener("click", function () {
                 const rowId = this.getAttribute("data-id");
                 const row = document.querySelector(`#row-${rowId}`);
 
-                // Скрыть кнопку "Save" и показать кнопку "Update"
                 this.style.display = "none";
                 row.querySelector(".update-button").style.display = "inline-block";
-                // Создать объект TaskDTO из данных строки
+
                 const updatedTaskDTO = {
-                    id: rowId, // ID строки
+                    id: rowId,
                     title: row.querySelector(".editable[data-field='title'] input").value.trim(),
                     assignedTo: row.querySelector(".editable[data-field='assignedTo'] input").value.trim(),
                     priority: row.querySelector(".editable[data-field='priority'] input").value.trim(),
                     status: row.querySelector(".editable[data-field='status'] input").value.trim()
                 };
 
-                // Вернуть данные строки в режим отображения
                 row.querySelectorAll(".editable").forEach(cell => {
                     const input = cell.querySelector("input");
-                    cell.textContent = input.value.trim(); // Возвращаем текстовое отображение
+                    cell.textContent = input.value.trim();
                 });
 
-                // Отправить `updatedUserDTO` на сервер через AJAX
                 fetch(`/tasks/update/${rowId}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(updatedTaskDTO) // Сериализуем объект TaskDTO в JSON
+                    body: JSON.stringify(updatedTaskDTO)
                 })
                     .then(response => {
                         if (!response.ok) {
@@ -431,6 +421,7 @@
     });
 </script>
 
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936ef6d12b28451d',t:'MTc0NTc2MzY2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 
 </html>
