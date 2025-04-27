@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  todoui:
+  todoui3:
     build: .
-    container_name: todoui
+    container_name: todoui3
     restart: always
     ports:
       - "3030:3030"
