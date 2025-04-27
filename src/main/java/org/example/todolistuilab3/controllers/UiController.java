@@ -1,7 +1,7 @@
 package org.example.todolistuilab3.controllers;
 
+import org.example.todolistuilab3.DTOs.EmailDTO;
 import org.example.todolistuilab3.DTOs.TaskDTO;
-import org.example.todolistuilab3.serviceClient.TaskServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,8 +16,7 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class UiController {
 
-    // Создание логгера
-    private static final Logger logger = LoggerFactory.getLogger(TaskServiceClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(UiController.class);
 
     private final UiRestController uiRestController;
 
@@ -38,16 +37,23 @@ public class UiController {
     @GetMapping("/{id}")
     public String getTaskById(@PathVariable Long id, Model model) {
         logger.info("Запрос для получения задачи с id: {}", id);
-         TaskDTO task = uiRestController.getTaskById(id);
-         model.addAttribute("task", task);
+        TaskDTO task = uiRestController.getTaskById(id);
+        model.addAttribute("task", task);
         return "oneTask";
+    }
+
+    @GetMapping("/dto/{id}")
+    public TaskDTO getTaskDTOById(@PathVariable Long id, Model model) {
+        TaskDTO task = uiRestController.getTaskById(id);
+        model.addAttribute("task", task);
+        return task;
     }
 
     @PostMapping("/create")
     public String createTask(@RequestBody TaskDTO taskDTO) {
         logger.info("Запрос на создание задачи: {}", taskDTO);
-        TaskDTO task = uiRestController.createTask(taskDTO);
-        logger.info("Задача создана: {}", task);
+        uiRestController.createTask(taskDTO);
+        logger.info("Задача создана: {}", taskDTO);
         return "redirect:/tasks";
     }
 
@@ -67,11 +73,33 @@ public class UiController {
         logger.info("Задача с id {} обновлена", id);
         return ResponseEntity.ok("Task updated");
     }
+
     @PostMapping("/delete/{id}")
     public String deleteTask(@PathVariable Long id) {
         logger.info("Запрос на удаление задачи с id: {}", id);
         uiRestController.deleteTask(id);
         logger.info("Задача с id {} удалена", id);
         return "redirect:/tasks";
+    }
+
+    @PostMapping("/send_email")
+    @ResponseBody
+    public String sendEmail(@RequestBody EmailDTO emailDTO) {
+        logger.info("Запрос на отправку email: {}", emailDTO);
+        return uiRestController.sendEmail(emailDTO);
+    }
+
+    @GetMapping("/check_emails_imap")
+    @ResponseBody
+    public List<String> checkEmailsUsingIMAP() throws Exception {
+        logger.info("Запрос для проверки писем через IMAP");
+        return uiRestController.checkEmailsUsingIMAP();
+    }
+
+    @GetMapping("/check_emails_pop3")
+    @ResponseBody
+    public String checkEmailsUsingPOP3() throws Exception {
+        logger.info("Запрос для проверки писем через POP3");
+        return uiRestController.checkEmailsUsingPOP3();
     }
 }
