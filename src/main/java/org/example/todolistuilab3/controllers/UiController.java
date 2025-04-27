@@ -111,6 +111,7 @@ public class UiController {
     @ResponseBody
     public String checkEmailsUsingPOP3() throws Exception {
         logger.info("Запрос для проверки писем через POP3");
-        return uiRestController.checkEmailsUsingPOP3();
+        String result = uiRestController.checkEmailsUsingPOP3();
+        return result;
     }
 }

@@ -10,3 +10,4 @@ EXPOSE 5005
 
 # Запускаем приложение с параметрами отладки
 CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "todoui.jar"]
+
