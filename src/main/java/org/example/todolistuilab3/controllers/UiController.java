@@ -3,6 +3,7 @@ package org.example.todolistuilab3.controllers;
 import org.example.todolistuilab3.DTOs.TaskDTO;
 import org.example.todolistuilab3.serviceClient.TaskServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +38,8 @@ public class UiController {
     @GetMapping("/{id}")
     public String getTaskById(@PathVariable Long id, Model model) {
         logger.info("Запрос для получения задачи с id: {}", id);
-        // Раскомментируйте следующую строку, если нужно добавить логику для получения задачи по ID
-        // TaskDTO task = uiRestController.getTaskById(id);
-        // model.addAttribute("task", task);
+         TaskDTO task = uiRestController.getTaskById(id);
+         model.addAttribute("task", task);
         return "oneTask";
     }
 
@@ -59,6 +59,14 @@ public class UiController {
         return "redirect:/tasks";
     }
 
+    @PutMapping("/updateOne/{id}")
+    @ResponseBody
+    public ResponseEntity<String> updateTaskFromOne(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        logger.info("Запрос на обновление задачи с id {}: {}", id, taskDTO);
+        uiRestController.updateTask(id, taskDTO);
+        logger.info("Задача с id {} обновлена", id);
+        return ResponseEntity.ok("Task updated");
+    }
     @PostMapping("/delete/{id}")
     public String deleteTask(@PathVariable Long id) {
         logger.info("Запрос на удаление задачи с id: {}", id);
